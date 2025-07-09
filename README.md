@@ -89,6 +89,12 @@ This populates the database with initial data (like users, airports, and planes)
 docker-compose exec backend python manage.py seed_data
 ```
 
+**c. Create an Administrator:**
+This command will prompt you to create a superuser account, which you can use to log into the Django admin panel (`/admin`).
+```bash
+docker-compose exec backend python manage.py createsuperuser
+```
+
 **🎉 Congratulations! The setup is complete.**
 
 ---
