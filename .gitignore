@@ -1,0 +1,91 @@
+# Genel
+.env
+.env*.local
+.DS_Store
+*.pem
+
+# Node.js & NPM
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.local
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# React Native / Expo
+.expo/
+expo-env.d.ts
+web-build/
+*.jsbundle
+app-example
+
+# Native Mobile Development
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+
+# iOS
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+project.xcworkspace
+.xcode.env.local
+/Pods/
+
+# Android
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Project specific
+/bff

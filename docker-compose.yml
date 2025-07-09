@@ -1,0 +1,111 @@
+
+
+services:
+  # 1. PostGIS Database Service
+  # Main database that will store our geographical data.
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: baykar_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=baykar_user
+      - POSTGRES_PASSWORD=baykar_password
+      - POSTGRES_DB=baykar_db
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  # 2. Redis Service
+  # Message broker for Django Channels.
+  # Provides communication between different Django processes (web server, simulation script).
+  redis:
+    image: "redis:alpine"
+    container_name: baykar_redis
+    restart: unless-stopped
+
+  # 3. Django Backend Service
+  # Main API server. Handles HTTP and WebSocket requests.
+  backend:
+    build: ./corebackend
+    container_name: baykar_backend
+    # `daphne` ASGI server is used to handle both HTTP and WebSocket requests.
+    command: daphne -b 0.0.0.0 -p 8000 core.asgi:application
+    volumes:
+      - ./corebackend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=baykar_db
+      - POSTGRES_USER=baykar_user
+      - POSTGRES_PASSWORD=baykar_password
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - HOST_IP=${HOST_IP} # Pass host IP for ALLOWED_HOSTS
+    depends_on:
+      - db
+      - redis
+    restart: unless-stopped
+
+  # 4. Frontend Service
+  # Vite-based React application for the user interface.
+  frontend:
+    build: ./frontend
+    container_name: baykar_frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # 5. Simulation Service
+  # Runs the Django management command to simulate real-time aircraft movements.
+  simulation:
+    build: ./corebackend
+    container_name: baykar_simulation
+    command: python manage.py run_simulation
+    volumes:
+      - ./corebackend:/app
+    environment:
+      - POSTGRES_NAME=baykar_db
+      - POSTGRES_USER=baykar_user
+      - POSTGRES_PASSWORD=baykar_password
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - HOST_IP=${HOST_IP} # Pass host IP for any potential use
+    depends_on:
+      - backend # Depends on backend to ensure migrations are run
+      - db
+      - redis
+    restart: unless-stopped
+
+  # 6. Mobile App Service (Expo)
+  # Runs the Expo Metro Bundler for the React Native mobile application.
+  mobile:
+    build: ./mobile
+    container_name: baykar_mobile
+    # Make the container interactive to ensure Expo prints the QR code
+    stdin_open: true
+    tty: true
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./mobile:/app
+      - /app/node_modules
+    environment:
+      # This tells Expo to use the host's IP address for the packager.
+      # The HOST_IP variable should be defined in a .env file in the root directory.
+      - REACT_NATIVE_PACKAGER_HOSTNAME=${HOST_IP}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
