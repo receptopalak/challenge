@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'backend', # Allow requests from the backend service name in Docker network
+    HOST_IP,
+    
 ]
 
 # Add the host IP to ALLOWED_HOSTS if it exists
@@ -152,6 +154,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # Vite dev server (from host)
     "http://127.0.0.1:5173",
 ]
+
+if HOST_IP:
+    CORS_ALLOWED_ORIGINS.extend([
+        f"http://{HOST_IP}:5173",
+        f"http://{HOST_IP}:8081", # Expo Metro Bundler
+    ])
+
+
 # When running on a mobile device via Expo, the origin can be dynamic.
 # In a real production scenario, you would lock this down to your specific app's origin.
 CORS_ALLOW_CREDENTIALS = True

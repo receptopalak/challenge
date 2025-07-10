@@ -103,6 +103,7 @@ services:
       # This tells Expo to use the host's IP address for the packager.
       # The HOST_IP variable should be defined in a .env file in the root directory.
       - REACT_NATIVE_PACKAGER_HOSTNAME=${HOST_IP}
+      - EXPO_PUBLIC_API_URL=http://${HOST_IP}:8000/api
     depends_on:
       - backend
     restart: unless-stopped
