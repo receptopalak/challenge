@@ -1,4 +1,4 @@
-# Baykar Fleet Management & Simulation Platform
+#  Fleet Management & Simulation Platform
 
 This project is a full-stack application designed for real-time fleet management and simulation. It includes a Django backend, a React-based web frontend, and a React Native mobile application, all containerized with Docker for a seamless development experience.
 
@@ -31,8 +31,8 @@ Follow these steps to get your development environment up and running.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/receptopalak/baykar_challenge
-cd baykar
+git clone https://github.com/receptopalak/challenge
+cd challenge
 ```
 
 ### 2. Create the Environment File (`.env`)
