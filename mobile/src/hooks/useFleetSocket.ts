@@ -9,9 +9,9 @@ interface LocationData {
     bearing: number;
 }
 
-// Same WebSocket URL as the web app
-// Ensure the path is correct based on your Django Channels setup
-const WS_URL = 'ws://192.168.1.28:8000/ws/fleet/';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000/api';
+const WS_URL = API_URL.replace('http', 'ws').replace('/api', '/ws/fleet/');
+
 
 export const useFleetSocket = () => {
     const { token } = useAuth();
